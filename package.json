@@ -1,0 +1,55 @@
+{
+  "name": "crypto-trading-bot-server-side",
+  "version": "1.0.0",
+  "author": "Anas Adnan Derk",
+  "license": "ISC",
+  "description": "Crypto Trading Backend API Using Node.js & Expressjs & Mongo Database",
+  "private": true,
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anas-derk/crypto-trading-bot-server-side.git"
+  },
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.1",
+    "node-code-generator": "^1.0.3",
+    "nodemailer": "^7.0.9",
+    "nodemon": "^3.1.10",
+    "sharp": "^0.34.4"
+  },
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.2.4"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "*.*",
+      ".env",
+      "*"
+    ],
+    "ignore": [
+      "node_modules",
+      "assets/images"
+    ],
+    "ext": "*",
+    "verbose": true,
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": "3030"
+    },
+    "restartable": "rs"
+  }
+}
