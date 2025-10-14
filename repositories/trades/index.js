@@ -1,8 +1,50 @@
 // Import Admin Model Object
 
-const { adminModel, tradeModel } = require("../../models");
+const { adminModel, tradeModel, strategyModel } = require("../../models");
 
 const { getSuitableTranslations } = require("../../helpers/translation");
+
+async function createOrder(adminId, orderInfo, language) {
+    try {
+        const admin = await adminModel.findById(adminId);
+        if (admin) {
+            if (admin.isWebsiteOwner) {
+                let strategy = {};
+                if (orderInfo?.strategyId) {
+                    strategy = await strategyModel.findById(orderInfo.strategyId);
+                } else {
+                    strategy = await strategyModel.findOne({ name: "Ali Zantout" });
+                }
+                if (strategy) {
+                    const newOrder = new tradeModel(orderInfo);
+                    await newOrder.save();
+                    return {
+                        msg: getSuitableTranslations("Create New Trade Order Process Has Been Successfully !!", language),
+                        error: false,
+                        data: {},
+                    }
+                }
+                return {
+                    msg: getSuitableTranslations("Sorry, This Strategy Is Not Exist !!", language),
+                    error: true,
+                    data: {},
+                }
+            }
+            return {
+                msg: getSuitableTranslations("Sorry, Permission Denied Because This Admin Is Not Website Owner !!", language),
+                error: true,
+                data: {},
+            }
+        }
+        return {
+            msg: getSuitableTranslations("Sorry, This Admin Is Not Exist !!", language),
+            error: true,
+            data: {},
+        }
+    } catch (err) {
+        throw Error(err);
+    }
+}
 
 async function getTradeInfo(tradeId, language) {
     try {
@@ -92,28 +134,18 @@ async function deleteTrade(adminId, tradeId, language) {
         const admin = await adminModel.findById(adminId);
         if (admin) {
             if (admin.isWebsiteOwner) {
-                if (!admin.isBlocked) {
-                    const tradeDetails = await tradeModel.findOneAndDelete({ _id: tradeId });
-                    if (tradeDetails) {
-                        return {
-                            msg: getSuitableTranslations("Deleting Trade Process Has Been Successfully !!", language),
-                            error: false,
-                            data: {},
-                        }
-                    }
+                const tradeDetails = await tradeModel.findOneAndDelete({ _id: tradeId });
+                if (tradeDetails) {
                     return {
-                        msg: getSuitableTranslations("Sorry, This Trade Is Not Exist !!", language),
-                        error: true,
+                        msg: getSuitableTranslations("Deleting Trade Process Has Been Successfully !!", language),
+                        error: false,
                         data: {},
                     }
                 }
                 return {
-                    msg: getSuitableTranslations("Sorry, This Admin Has Been Blocked !!", language),
+                    msg: getSuitableTranslations("Sorry, This Trade Is Not Exist !!", language),
                     error: true,
-                    data: {
-                        blockingDate: admin.blockingDate,
-                        blockingReason: admin.blockingReason,
-                    },
+                    data: {},
                 }
             }
             return {
@@ -134,6 +166,7 @@ async function deleteTrade(adminId, tradeId, language) {
 }
 
 module.exports = {
+    createOrder,
     getTradeInfo,
     getTradesCount,
     getAllTradesInsideThePage,

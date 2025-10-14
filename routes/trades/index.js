@@ -25,6 +25,21 @@ const {
     validateStatus
 } = tradesMiddlewares;
 
+tradesRouter.post("/create-order",
+    validateJWT,
+    (req, res, next) => {
+        const { strategyId, amount, pair } = req.body;
+        validateIsExistValueForFieldsAndDataTypes([
+            { fieldName: "Strategy Id", fieldValue: strategyId, dataTypes: ["ObjectId"], isRequiredValue: false },
+            { fieldName: "Amount", fieldValue: amount, dataTypes: ["number"], isRequiredValue: true },
+            { fieldName: "Pair", fieldValue: pair, dataTypes: ["string"], isRequiredValue: true },
+        ], res, next);
+    },
+    (req, res, next) => validateNumbersIsGreaterThanZero([req.body.amount], res, next, [], "Sorry, Please Send Valid Amount ( Number Must Be Greater Than Zero ) !!"),
+    (req, res, next) => validatePair(req.body.pair, res, next),
+    tradesController.postCreateOrder
+);
+
 tradesRouter.get("/trade-info", validateJWT, tradesController.getTradeInfo);
 
 tradesRouter.get("/trades-count", validateJWT, tradesController.getTradesCount);

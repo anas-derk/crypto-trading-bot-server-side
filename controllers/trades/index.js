@@ -6,6 +6,15 @@ const { getSuitableTranslations } = translationHelpers;
 
 const tradesOPerationsManagmentFunctions = require("../../repositories/trades");
 
+async function postCreateOrder(req, res) {
+    try {
+        res.json(await tradesOPerationsManagmentFunctions.createOrder(req.data._id, req.body, req.query.language));
+    }
+    catch (err) {
+        res.status(500).json(getResponseObject(getResponseObject(getSuitableTranslations("Internal Server Error !!", req.query.language), true, {}), true, {}));
+    }
+}
+
 async function getTradeInfo(req, res) {
     try {
         res.json(await tradesOPerationsManagmentFunctions.getTradeInfo(req.data._id, req.query.language));
@@ -70,6 +79,7 @@ async function deleteTrade(req, res) {
 }
 
 module.exports = {
+    postCreateOrder,
     getTradeInfo,
     getTradesCount,
     getAllTradesInsideThePage,
