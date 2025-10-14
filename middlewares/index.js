@@ -4,6 +4,7 @@ const filesMiddlewares = require("./files");
 const globalMiddlewares = require("./global");
 const numbersMiddlewares = require("./numbers");
 const sortMiddlewares = require("./sort");
+const tradesMiddlewares = require("./trades");
 
 module.exports = {
     authMiddlewares,
@@ -12,4 +13,5 @@ module.exports = {
     globalMiddlewares,
     numbersMiddlewares,
     sortMiddlewares,
+    tradesMiddlewares
 }
