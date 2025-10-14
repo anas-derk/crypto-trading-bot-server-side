@@ -1,11 +1,14 @@
 const SIDE = ["buy", "sell"];
 
-const PAIR = ["BTC/USD"];
+const PAIR = ["BTC/USDT", "ETH/USDT"];
 
 const STATUS = ["pending", "filled", "failed"];
+
+const DEFAULT_STATUS = STATUS[0];
 
 module.exports = {
     SIDE,
     PAIR,
-    STATUS
-};
+    STATUS,
+    DEFAULT_STATUS
+}

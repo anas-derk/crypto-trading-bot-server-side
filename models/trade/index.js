@@ -5,11 +5,11 @@ const tradeConstants = require("../../constants/trades");
 // Create Trade Schema
 
 const tradeSchema = new mongoose.Schema({
-    symbol: { type: String, required: true },
+    pair: { type: String, required: true, enum: tradeConstants.PAIR },
     side: { type: String, enum: tradeConstants.SIDE, required: true },
     amount: { type: Number, required: true },
     price: { type: Number, required: true },
-    status: { type: String, enum: tradeConstants.STATUS, default: "pending" },
+    status: { type: String, enum: tradeConstants.STATUS, default: tradeConstants.DEFAULT_STATUS },
     createdAt: { type: Date, default: Date.now }
 });
 

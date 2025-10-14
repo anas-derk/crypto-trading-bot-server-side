@@ -53,7 +53,7 @@ tradesRouter.get("/all-trades-inside-the-page",
         next();
     },
     (req, res, next) => {
-        const { pair } = req.body;
+        const { pair } = req.query;
         if (pair) {
             validatePair(pair, res, next);
             return;
@@ -61,7 +61,7 @@ tradesRouter.get("/all-trades-inside-the-page",
         next();
     },
     (req, res, next) => {
-        const { status } = req.body;
+        const { status } = req.query;
         if (status) {
             validateStatus(status, res, next);
             return;
