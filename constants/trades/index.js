@@ -2,7 +2,7 @@ const SIDE = ["buy", "sell"];
 
 const PAIR = ["BTC/USDT", "ETH/USDT"];
 
-const STATUS = ["pending", "filled", "failed"];
+const STATUS = ["pending", "completed", "failed"];
 
 const DEFAULT_STATUS = STATUS[0];
 
