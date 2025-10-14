@@ -4,7 +4,7 @@ const { getResponseObject } = responsesHelpers;
 
 const { getSuitableTranslations } = translationHelpers;
 
-const tradesOPerationsManagmentFunctions = require("../../repositories/admins");
+const tradesOPerationsManagmentFunctions = require("../../repositories/trades");
 
 async function getTradeInfo(req, res) {
     try {
@@ -49,6 +49,7 @@ async function getAllTradesInsideThePage(req, res) {
         res.json(result);
     }
     catch (err) {
+        console.log(err);
         res.status(500).json(getResponseObject(getResponseObject(getSuitableTranslations("Internal Server Error !!", req.query.language), true, {}), true, {}));
     }
 }
