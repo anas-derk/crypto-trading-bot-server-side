@@ -2,6 +2,7 @@ const languages = require("./languages");
 const paths = require("./paths");
 const sort = require("./sort");
 const tokens = require("./tokens");
+const trades = require("./trades");
 const users = require("./users");
 const verification_code = require("./verification_code");
 
@@ -10,6 +11,7 @@ module.exports = {
     paths,
     sort,
     tokens,
+    trades,
     users,
     verification_code
 };
