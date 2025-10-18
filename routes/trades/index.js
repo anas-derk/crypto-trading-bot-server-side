@@ -22,6 +22,7 @@ const {
 const {
     validateSide,
     validatePair,
+    validateTimeframe,
     validateStatus
 } = tradesMiddlewares;
 
@@ -33,10 +34,12 @@ tradesRouter.post("/create-order",
             { fieldName: "Strategy Id", fieldValue: strategyId, dataTypes: ["ObjectId"], isRequiredValue: false },
             { fieldName: "Amount", fieldValue: amount, dataTypes: ["number"], isRequiredValue: true },
             { fieldName: "Pair", fieldValue: pair, dataTypes: ["string"], isRequiredValue: true },
+            { fieldName: "Time Frame", fieldValue: pair, dataTypes: ["string"], isRequiredValue: true },
         ], res, next);
     },
     (req, res, next) => validateNumbersIsGreaterThanZero([req.body.amount], res, next, [], "Sorry, Please Send Valid Amount ( Number Must Be Greater Than Zero ) !!"),
     (req, res, next) => validatePair(req.body.pair, res, next),
+    (req, res, next) => validateTimeframe(req.body.timeframe, res, next),
     tradesController.postCreateOrder
 );
 

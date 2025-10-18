@@ -1,6 +1,6 @@
 const { getResponseObject } = require("../../helpers/responses");
 
-const { SIDE, PAIR, STATUS } = require("../../constants/trades");
+const { SIDE, PAIR, TIMEFRAME, STATUS } = require("../../constants/trades");
 
 function validateSide(side, res, nextFunc, errorMsg = "Sorry, Please Send Valid Trade Side !!") {
     if (!SIDE.includes(side)) {
@@ -18,6 +18,14 @@ function validatePair(pair, res, nextFunc, errorMsg = "Sorry, Please Send Valid 
     nextFunc();
 }
 
+function validateTimeframe(timeframe, res, nextFunc, errorMsg = "Sorry, Please Send Valid Time Frame !!") {
+    if (!TIMEFRAME.includes(timeframe)) {
+        res.status(400).json(getResponseObject(errorMsg, true, {}));
+        return;
+    }
+    nextFunc();
+}
+
 function validateStatus(status, res, nextFunc, errorMsg = "Sorry, Please Send Valid Trade Status !!") {
     if (!STATUS.includes(status)) {
         res.status(400).json(getResponseObject(errorMsg, true, {}));
@@ -29,5 +37,6 @@ function validateStatus(status, res, nextFunc, errorMsg = "Sorry, Please Send Va
 module.exports = {
     validateSide,
     validatePair,
+    validateTimeframe,
     validateStatus
 }

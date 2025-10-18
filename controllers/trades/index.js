@@ -1,14 +1,23 @@
-const { responsesHelpers, translationHelpers } = require("../../helpers");
+const { responsesHelpers, translationHelpers, tradeHelpers } = require("../../helpers");
 
 const { getResponseObject } = responsesHelpers;
 
 const { getSuitableTranslations } = translationHelpers;
 
+const { runBot } = tradeHelpers;
+
 const tradesOPerationsManagmentFunctions = require("../../repositories/trades");
 
 async function postCreateOrder(req, res) {
     try {
-        res.json(await tradesOPerationsManagmentFunctions.createOrder(req.data._id, req.body, req.query.language));
+        const result = await tradesOPerationsManagmentFunctions.createOrder(req.data._id, req.body, req.query.language);
+        res.json(result);
+        try {
+            const aa = await runBot(result.data);
+        }
+        catch (err) {
+            console.log(`Bot Error: ${err.message}`);
+        }
     }
     catch (err) {
         res.status(500).json(getResponseObject(getResponseObject(getSuitableTranslations("Internal Server Error !!", req.query.language), true, {}), true, {}));

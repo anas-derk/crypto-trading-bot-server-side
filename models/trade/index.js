@@ -7,6 +7,7 @@ const tradeConstants = require("../../constants/trades");
 const tradeSchema = new mongoose.Schema({
     pair: { type: String, required: true, enum: tradeConstants.PAIR },
     side: { type: String, enum: tradeConstants.SIDE, default: null },
+    timeframe: { type: String, enum: tradeConstants.TIMEFRAME, required: true },
     amount: { type: Number, required: true },
     price: { type: Number, default: null },
     status: { type: String, enum: tradeConstants.STATUS, default: tradeConstants.DEFAULT_STATUS },

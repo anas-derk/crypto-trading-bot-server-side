@@ -16,12 +16,12 @@ async function createOrder(adminId, orderInfo, language) {
                     strategy = await strategyModel.findOne({ name: "Ali Zantout" });
                 }
                 if (strategy) {
-                    const newOrder = new tradeModel(orderInfo);
-                    await newOrder.save();
+                    const newInstance = new tradeModel(orderInfo);
+                    const newOrder = await newInstance.save();
                     return {
                         msg: getSuitableTranslations("Create New Trade Order Process Has Been Successfully !!", language),
                         error: false,
-                        data: {},
+                        data: newOrder,
                     }
                 }
                 return {
