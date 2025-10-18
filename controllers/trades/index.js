@@ -13,13 +13,14 @@ async function postCreateOrder(req, res) {
         const result = await tradesOPerationsManagmentFunctions.createOrder(req.data._id, req.body, req.query.language);
         res.json(result);
         try {
-            const aa = await runBot(result.data);
+            await runBot(result.data);
         }
         catch (err) {
             console.log(`Bot Error: ${err.message}`);
         }
     }
     catch (err) {
+        console.log(err);
         res.status(500).json(getResponseObject(getResponseObject(getSuitableTranslations("Internal Server Error !!", req.query.language), true, {}), true, {}));
     }
 }
