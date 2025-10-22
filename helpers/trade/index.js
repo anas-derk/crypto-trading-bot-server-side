@@ -28,6 +28,11 @@ async function runBot(order) {
     loop(exchange, order);
 }
 
+function handleCandle(candle) {
+    console.log(candle);
+}
+
 module.exports = {
-    runBot
+    runBot,
+    handleCandle
 }
