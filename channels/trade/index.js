@@ -2,6 +2,8 @@ const WebSocket = require("ws");
 
 let tradePlatformSocket = null;
 
+const { handleCandleData } = require("../../helpers/trade");
+
 function initializeTradeSocket(baseSocketURL, rest) {
     try {
         tradePlatformSocket = new WebSocket(`${baseSocketURL}${rest}`);
@@ -15,7 +17,8 @@ function initializeTradeSocket(baseSocketURL, rest) {
             console.log("Close Connect To Trade Platform Web Socket !: ", `code: ${code}`, `reason: ${reason}`);
         });
         tradePlatformSocket.on("message", (data) => {
-            console.log(JSON.parse(data).data);
+            const message = data instanceof Buffer ? data.toString() : data;
+            handleCandleData(JSON.parse(message)?.data);
         })
         return tradePlatformSocket;
     }
