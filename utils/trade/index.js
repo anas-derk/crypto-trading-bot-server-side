@@ -5,7 +5,7 @@ function getCandelType(openPrice, closePrice) {
 function getCandleTypes(candles) {
     let candleTypes = [];
     for (let candle of candles) {
-        const candleType = getCandelType(candle[1], candle[4]);
+        const candleType = getCandelType(candle.open, candle.close);
         candleTypes.push(candleType);
     }
     return candleTypes;
