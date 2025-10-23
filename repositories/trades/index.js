@@ -53,7 +53,7 @@ async function getTradeInfo(tradeId, language) {
             return {
                 msg: getSuitableTranslations("Get Trade Info Process Has Been Successfully !!", language),
                 error: false,
-                data: user,
+                data: trade,
             }
         }
         return {
