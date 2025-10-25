@@ -129,6 +129,37 @@ async function getAllTradesInsideThePage(adminId, pageNumber, pageSize, filters,
     }
 }
 
+async function getAllTrades(filters, language) {
+    try {
+        return {
+            msg: getSuitableTranslations("Get All Trades Process Has Been Successfully !!", language),
+            error: false,
+            data: {
+                trades: await tradeModel.find(filters),
+                tradesCount: await tradeModel.countDocuments(filters),
+            },
+        }
+    } catch (err) {
+        throw Error(err);
+    }
+}
+
+async function openTrade(filters, side, price, language) {
+    try {
+        const tradeDetails = await tradeModel.findOne({ ...filters, _id:  });
+        if (tradeDetails) {
+            return {
+                msg: getSuitableTranslations("Open Trade Process Has Been Successfully !!", language),
+                error: false,
+                data: {},
+            }
+        }
+    }
+    catch (err) {
+        throw Error(err);
+    }
+}
+
 async function deleteTrade(adminId, tradeId, language) {
     try {
         const admin = await adminModel.findById(adminId);
@@ -170,5 +201,7 @@ module.exports = {
     getTradeInfo,
     getTradesCount,
     getAllTradesInsideThePage,
-    deleteTrade
+    getAllTrades,
+    deleteTrade,
+    openTrade
 }

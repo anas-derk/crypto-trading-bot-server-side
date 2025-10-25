@@ -4,6 +4,8 @@ const { getCandleTypes, checkCandlesSequence } = require("../../utils/trade");
 
 const { saveCandleData, getAllCandles, deleteManyCandle } = require("../../repositories/candles");
 
+const { getAllTrades } = require("../../repositories/trades");
+
 async function runBot(timeframe, pair) {
     try {
         let candles = [];
@@ -16,12 +18,11 @@ async function runBot(timeframe, pair) {
         }
         if (candles.length < 2) return;
         const candleTypes = getCandleTypes(candles);
-        console.log(candleTypes);
         const result = checkCandlesSequence(candleTypes);
         console.log(result);
         if (!result.status) {
             try {
-                // await deleteManyCandle({ timeframe, pair }, "en");
+                await deleteManyCandle({ timeframe, pair }, "en");
             }
             catch (err) {
                 console.log("error in delete many candles by filters: ", err.message, "=========================================================");
@@ -31,7 +32,12 @@ async function runBot(timeframe, pair) {
             }
         }
         if (result.count < 7) return;
-        console.log("aa");
+        try {
+            await executeTradeOrders(timeframe, pair);
+        }
+        catch (err) {
+            console.log("error in execute trade order: ", err.message, "=========================================================");
+        }
     }
     catch (err) {
         throw err;
@@ -66,6 +72,31 @@ async function handleCandleData(data) {
     }
     catch (err) {
         console.log("error in handle candle data: ", err.message, "=========================================================");
+    }
+}
+
+async function executeTradeOrders(timeframe, pair) {
+    try {
+        try {
+            await deleteManyCandle({ timeframe, pair }, "en");
+        }
+        catch (err) {
+            console.log("error in delete many candles by filters: ", err.message, "=========================================================");
+        }
+        let trades = [];
+        try {
+            trades = (await getAllTrades({ timeframe, pair, status: "pending" }, "en")).data.trades;
+        }
+        catch (err) {
+            console.log("error in get trades by filters: ", err.message, "=========================================================");
+            return;
+        }
+        for (let trade of trades) {
+            await openTrade({ timeframe, pair },);
+        }
+    }
+    catch (err) {
+        console.log("error on execute trade order: ", err.message);
     }
 }
 

@@ -24,6 +24,7 @@ function checkCandlesSequence(sequence) {
             return {
                 status: false,
                 count: countFirst,
+                type: sequence[0]
             }
         }
         // الشرط 2: إذا كانت نفس نوع الشمعة الأولى ⇒ زِد العدّاد
@@ -35,6 +36,7 @@ function checkCandlesSequence(sequence) {
     return {
         status: true,
         count: countFirst,
+        type: sequence[0]
     }
 }
 
