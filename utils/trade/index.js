@@ -21,20 +21,21 @@ function checkCandlesSequence(sequence) {
         const current = sequence[i];
         // الشرط 1: إذا كانت الشمعة الحالية مثل الأولى ومتصلة بنفس نوعها ⇒ مرفوض
         if (current === first && prev === first) {
-            return false;
+            return {
+                status: false,
+                count: countFirst,
+            }
         }
         // الشرط 2: إذا كانت نفس نوع الشمعة الأولى ⇒ زِد العدّاد
         if (current === first) {
             countFirst++;
-            // إذا وصلنا إلى 7 تكرارات ⇒ نجاح وتوقف
-            if (countFirst === 7) {
-                return true;
-            }
         }
         prev = current;
     }
-    // إذا ما وصلنا لـ7 => مرفوضة
-    return false;
+    return {
+        status: true,
+        count: countFirst,
+    }
 }
 
 module.exports = {

@@ -4,11 +4,11 @@ const { getCandleTypes, checkCandlesSequence } = require("../../utils/trade");
 
 const { saveCandleData, getAllCandles, deleteManyCandle } = require("../../repositories/candles");
 
-async function runBot() {
+async function runBot(timeframe, pair) {
     try {
         let candles = [];
         try {
-            candles = (await getAllCandles({ timeframe: "1m" }, "en")).data.candles;
+            candles = (await getAllCandles({ timeframe, pair }, "en")).data.candles;
         }
         catch (err) {
             console.log("error in get candles by filters: ", err.message, "=========================================================");
@@ -16,10 +16,12 @@ async function runBot() {
         }
         if (candles.length < 2) return;
         const candleTypes = getCandleTypes(candles);
-        const isValidSequence = checkCandlesSequence(candleTypes);
-        if (!isValidSequence) {
+        console.log(candleTypes);
+        const result = checkCandlesSequence(candleTypes);
+        console.log(result);
+        if (!result.status) {
             try {
-                // await deleteManyCandle({ timeframe: "1m" }, "en");
+                await deleteManyCandle({ timeframe, pair }, "en");
             }
             catch (err) {
                 console.log("error in delete many candles by filters: ", err.message, "=========================================================");
@@ -28,6 +30,7 @@ async function runBot() {
                 return;
             }
         }
+        if (result.count < 7) return;
         console.log("aa");
     }
     catch (err) {
@@ -54,7 +57,7 @@ async function handleCandleData(data) {
             return;
         }
         try {
-            await runBot();
+            await runBot(candleData.timeframe, candleData.pair);
         }
         catch (err) {
             console.log("error in run bot: ", err.message, "=========================================================");
