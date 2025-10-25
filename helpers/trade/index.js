@@ -21,7 +21,7 @@ async function runBot(timeframe, pair) {
         console.log(result);
         if (!result.status) {
             try {
-                await deleteManyCandle({ timeframe, pair }, "en");
+                // await deleteManyCandle({ timeframe, pair }, "en");
             }
             catch (err) {
                 console.log("error in delete many candles by filters: ", err.message, "=========================================================");
@@ -30,7 +30,7 @@ async function runBot(timeframe, pair) {
                 return;
             }
         }
-        if (result.count < 7) return;
+        if (result.count < 6) return;
         console.log("aa");
     }
     catch (err) {

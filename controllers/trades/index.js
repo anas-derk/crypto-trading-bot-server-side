@@ -20,7 +20,6 @@ async function postCreateOrder(req, res) {
         }
     }
     catch (err) {
-        console.log(err);
         res.status(500).json(getResponseObject(getResponseObject(getSuitableTranslations("Internal Server Error !!", req.query.language), true, {}), true, {}));
     }
 }
@@ -38,7 +37,8 @@ function getFiltersObject(filters) {
     let filtersObject = {};
     for (let objectKey in filters) {
         if (objectKey === "_id") filtersObject[objectKey] = filters[objectKey];
-        if (objectKey === "side") filtersObject[objectKey] = filters[objectKey];
+        if (objectKey === "startSide") filtersObject[objectKey] = filters[objectKey];
+        if (objectKey === "endSide") filtersObject[objectKey] = filters[objectKey];
         if (objectKey === "pair") filtersObject[objectKey] = filters[objectKey];
         if (objectKey === "status") filtersObject[objectKey] = filters[objectKey];
     }

@@ -50,12 +50,13 @@ tradesRouter.get("/trades-count", validateJWT, tradesController.getTradesCount);
 tradesRouter.get("/all-trades-inside-the-page",
     validateJWT,
     (req, res, next) => {
-        const { pageNumber, pageSize, _id, side, pair, status } = req.query;
+        const { pageNumber, pageSize, _id, startSide, endSide, pair, status } = req.query;
         validateIsExistValueForFieldsAndDataTypes([
             { fieldName: "page Number", fieldValue: Number(pageNumber), dataTypes: ["number"], isRequiredValue: true },
             { fieldName: "page Size", fieldValue: Number(pageSize), dataTypes: ["number"], isRequiredValue: true },
             { fieldName: "Trade Id", fieldValue: _id, dataTypes: ["ObjectId"], isRequiredValue: false },
-            { fieldName: "Side", fieldValue: side, dataTypes: ["string"], isRequiredValue: false },
+            { fieldName: "Start Side", fieldValue: startSide, dataTypes: ["string"], isRequiredValue: false },
+            { fieldName: "End Side", fieldValue: endSide, dataTypes: ["string"], isRequiredValue: false },
             { fieldName: "Pair", fieldValue: pair, dataTypes: ["string"], isRequiredValue: false },
             { fieldName: "Status", fieldValue: status, dataTypes: ["string"], isRequiredValue: false },
         ], res, next);
@@ -63,9 +64,17 @@ tradesRouter.get("/all-trades-inside-the-page",
     (req, res, next) => validateNumbersIsGreaterThanZero([req.query.pageNumber, req.query.pageSize], res, next, ["Sorry, Please Send Valid Page Number ( Number Must Be Greater Than Zero ) !!", "Sorry, Please Send Valid Page Size ( Number Must Be Greater Than Zero ) !!"]),
     (req, res, next) => validateNumbersIsNotFloat([req.query.pageNumber, req.query.pageSize], res, next, ["Sorry, Please Send Valid Page Number ( Number Must Be Not Float ) !!", "Sorry, Please Send Valid Page Size ( Number Must Be Not Float ) !!"]),
     (req, res, next) => {
-        const { side } = req.query;
-        if (side) {
-            validateSide(side, res, next);
+        const { startSide } = req.query;
+        if (startSide) {
+            validateSide(startSide, res, next);
+            return;
+        }
+        next();
+    },
+    (req, res, next) => {
+        const { endSide } = req.query;
+        if (endSide) {
+            validateSide(endSide, res, next);
             return;
         }
         next();

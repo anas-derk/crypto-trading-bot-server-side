@@ -3,6 +3,7 @@ const server = require("./http");
 const { config } = require("dotenv");
 const { initializeTradeSocket, getSocket } = require("./channels/trade");
 const { BINANCE_TRADE_STREAMS } = require("./constants/trades");
+const { runBot } = require("./helpers/trade");
 
 config();
 
@@ -13,7 +14,8 @@ database.connect(process.env.DB_URL);
 database.connection.on("connected", () => {
     const Server = server.listen(PORT, () => {
         console.log(`Server Listening On Port ${PORT}`);
-        initializeTradeSocket(process.env.BINANCE_BASE_WEB_SOCKET_URL, `/stream?streams=${BINANCE_TRADE_STREAMS.map((stream) => `${stream.pair}@kline_${stream.timeframe}`).join("/")}`);
+        runBot("1m", "ETH/USDT")
+        // initializeTradeSocket(process.env.BINANCE_BASE_WEB_SOCKET_URL, `/stream?streams=${BINANCE_TRADE_STREAMS.map((stream) => `${stream.pair}@kline_${stream.timeframe}`).join("/")}`);
     });
     process.on("SIGINT", async () => {
         const binanceSocket = getSocket();
