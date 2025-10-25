@@ -4,7 +4,7 @@ const PAIR = ["ETH/USDT"];
 
 const TIMEFRAME = ["1m"];
 
-const STATUS = ["pending", "executed", "failed"];
+const STATUS = ["pending", "open", "closed", "failed"];
 
 const DEFAULT_STATUS = STATUS[0];
 

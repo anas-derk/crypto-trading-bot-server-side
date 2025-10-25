@@ -13,7 +13,15 @@ const tradeSchema = new mongoose.Schema({
     startPrice: { type: Number, default: null },
     endPrice: { type: Number, default: null },
     status: { type: String, enum: tradeConstants.STATUS, default: tradeConstants.DEFAULT_STATUS },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    openAt: {
+        type: Date,
+        required: this.status === "open"
+    },
+    closedAt: {
+        type: Date,
+        required: this.status === "closed"
+    },
 });
 
 // Create Trade Model From Trade Schema

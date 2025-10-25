@@ -30,7 +30,7 @@ async function runBot(timeframe, pair) {
                 return;
             }
         }
-        if (result.count < 6) return;
+        if (result.count < 7) return;
         console.log("aa");
     }
     catch (err) {
