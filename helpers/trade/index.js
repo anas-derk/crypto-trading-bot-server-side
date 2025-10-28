@@ -1,10 +1,12 @@
 const ccxt = require("ccxt");
 
-const { getCandleTypes, checkCandlesSequence } = require("../../utils/trade");
+const { getCandleTypes, checkCandlesSequence, getSuitableSide } = require("../../utils/trade");
 
 const { saveCandleData, getAllCandles, deleteManyCandle } = require("../../repositories/candles");
 
-const { getAllTrades } = require("../../repositories/trades");
+const { getAllTrades, openTrade, closeTrade } = require("../../repositories/trades");
+
+const { createScheduledOrder } = require("../../repositories/scheduled_trades");
 
 async function runBot(timeframe, pair) {
     try {
@@ -19,10 +21,9 @@ async function runBot(timeframe, pair) {
         if (candles.length < 2) return;
         const candleTypes = getCandleTypes(candles);
         const result = checkCandlesSequence(candleTypes);
-        console.log(result);
         if (!result.status) {
             try {
-                await deleteManyCandle({ timeframe, pair }, "en");
+                // await deleteManyCandle({ timeframe, pair }, "en");
             }
             catch (err) {
                 console.log("error in delete many candles by filters: ", err.message, "=========================================================");
@@ -33,7 +34,7 @@ async function runBot(timeframe, pair) {
         }
         if (result.count < 7) return;
         try {
-            await executeTradeOrders(timeframe, pair);
+            await executeTradeOrders(timeframe, pair, result.type);
         }
         catch (err) {
             console.log("error in execute trade order: ", err.message, "=========================================================");
@@ -75,10 +76,10 @@ async function handleCandleData(data) {
     }
 }
 
-async function executeTradeOrders(timeframe, pair) {
+async function executeTradeOrders(timeframe, pair, type) {
     try {
         try {
-            await deleteManyCandle({ timeframe, pair }, "en");
+            // await deleteManyCandle({ timeframe, pair }, "en");
         }
         catch (err) {
             console.log("error in delete many candles by filters: ", err.message, "=========================================================");
@@ -92,7 +93,19 @@ async function executeTradeOrders(timeframe, pair) {
             return;
         }
         for (let trade of trades) {
-            await openTrade({ timeframe, pair },);
+            try {
+                await openTrade(trade._id, getSuitableSide(type), 3, "en");
+            }
+            catch (err) {
+                console.log(`error in open trade by id: ${trade._id}`, err.message, "=========================================================");
+                return;
+            }
+            try {
+                await createScheduledOrder(trade._id, "en");
+            }
+            catch (err) {
+                console.log(`error in create scheduled trade by id: ${trade._id}`, err.message, "=========================================================");
+            }
         }
     }
     catch (err) {

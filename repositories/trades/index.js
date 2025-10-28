@@ -144,15 +144,51 @@ async function getAllTrades(filters, language) {
     }
 }
 
-async function openTrade(filters, side, price, language) {
+async function openTrade(tradeId, side, price, language) {
     try {
-        const tradeDetails = await tradeModel.findOne({ ...filters, _id:  });
-        if (tradeDetails) {
+        const trade = await tradeModel.findById(tradeId);
+        if (trade) {
+            trade.startSide = side;
+            trade.startPrice = price;
+            trade.openAt = Date.now();
+            trade.status = "open";
+            await trade.save();
             return {
                 msg: getSuitableTranslations("Open Trade Process Has Been Successfully !!", language),
                 error: false,
                 data: {},
             }
+        }
+        return {
+            msg: getSuitableTranslations("Sorry, This Trade Is Not Exist !!", language),
+            error: true,
+            data: {},
+        }
+    }
+    catch (err) {
+        throw Error(err);
+    }
+}
+
+async function closeTrade(tradeId, price, language) {
+    try {
+        const trade = await tradeModel.findOne(tradeId);
+        if (trade) {
+            trade.endSide = trade.startSide === "buy" ? "sell" : "buy";
+            trade.endPrice = price;
+            trade.closedAt = Date.now();
+            trade.status = "closed";
+            await trade.save();
+            return {
+                msg: getSuitableTranslations("Open Trade Process Has Been Successfully !!", language),
+                error: false,
+                data: {},
+            }
+        }
+        return {
+            msg: getSuitableTranslations("Sorry, This Trade Is Not Exist !!", language),
+            error: true,
+            data: {},
         }
     }
     catch (err) {
@@ -165,8 +201,8 @@ async function deleteTrade(adminId, tradeId, language) {
         const admin = await adminModel.findById(adminId);
         if (admin) {
             if (admin.isWebsiteOwner) {
-                const tradeDetails = await tradeModel.findOneAndDelete({ _id: tradeId });
-                if (tradeDetails) {
+                const trade = await tradeModel.findOneAndDelete({ _id: tradeId });
+                if (trade) {
                     return {
                         msg: getSuitableTranslations("Deleting Trade Process Has Been Successfully !!", language),
                         error: false,
@@ -202,6 +238,7 @@ module.exports = {
     getTradesCount,
     getAllTradesInsideThePage,
     getAllTrades,
+    openTrade,
+    closeTrade,
     deleteTrade,
-    openTrade
 }

@@ -14,7 +14,7 @@ database.connect(process.env.DB_URL);
 database.connection.on("connected", () => {
     const Server = server.listen(PORT, () => {
         console.log(`Server Listening On Port ${PORT}`);
-        // runBot("1m", "ETH/USDT")
+        runBot("1m", "ETH/USDT")
         // initializeTradeSocket(process.env.BINANCE_BASE_WEB_SOCKET_URL, `/stream?streams=${BINANCE_TRADE_STREAMS.map((stream) => `${stream.pair}@kline_${stream.timeframe}`).join("/")}`);
     });
     process.on("SIGINT", async () => {
