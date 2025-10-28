@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 5200;
 database.connect(process.env.DB_URL);
 
 database.connection.on("connected", () => {
+    require("./cron");
     const Server = server.listen(PORT, () => {
         console.log(`Server Listening On Port ${PORT}`);
         runBot("1m", "ETH/USDT")
@@ -19,7 +20,7 @@ database.connection.on("connected", () => {
     });
     process.on("SIGINT", async () => {
         const binanceSocket = getSocket();
-        if (binanceSocket.readyState) {
+        if (binanceSocket?.readyState) {
             binanceSocket.close();
         }
         if (database.connection.readyState) {

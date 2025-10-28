@@ -4,7 +4,7 @@ const { getCandleTypes, checkCandlesSequence, getSuitableSide } = require("../..
 
 const { saveCandleData, getAllCandles, deleteManyCandle } = require("../../repositories/candles");
 
-const { getAllTrades, openTrade, closeTrade } = require("../../repositories/trades");
+const { getAllTrades, openTrade } = require("../../repositories/trades");
 
 const { createScheduledOrder } = require("../../repositories/scheduled_trades");
 
@@ -109,7 +109,7 @@ async function executeTradeOrders(timeframe, pair, type) {
         }
     }
     catch (err) {
-        console.log("error on execute trade order: ", err.message);
+        console.log("error on execute trade order: ", err.message, "=========================================================");
     }
 }
 

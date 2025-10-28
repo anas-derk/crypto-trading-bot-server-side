@@ -5,7 +5,7 @@ const tradeConstants = require("../../constants/trades");
 // Create Scheduled Trade Schema
 
 const scheduledTradeSchema = new mongoose.Schema({
-    tradeId: { type: mongoose.Schema.Types.ObjectId, ref: 'trade', required: true },
+    trade: { type: mongoose.Schema.Types.ObjectId, ref: 'trade', required: true },
     action: { type: String, enum: tradeConstants.SCHEDULED_TRADE_ACTION, default: tradeConstants.DEFAULT_SCHEDULED_TRADE_ACTION },
     executeAt: { type: Date, required: true },
     executedAt: { type: Date, default: null },
