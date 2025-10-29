@@ -23,7 +23,7 @@ async function runBot(timeframe, pair) {
         const result = checkCandlesSequence(candleTypes);
         if (!result.status) {
             try {
-                // await deleteManyCandle({ timeframe, pair }, "en");
+                await deleteManyCandle({ timeframe, pair }, "en");
             }
             catch (err) {
                 console.log("error in delete many candles by filters: ", err.message, "=========================================================");
@@ -79,7 +79,7 @@ async function handleCandleData(data) {
 async function executeTradeOrders(timeframe, pair, type) {
     try {
         try {
-            // await deleteManyCandle({ timeframe, pair }, "en");
+            await deleteManyCandle({ timeframe, pair }, "en");
         }
         catch (err) {
             console.log("error in delete many candles by filters: ", err.message, "=========================================================");
