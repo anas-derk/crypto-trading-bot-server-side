@@ -79,11 +79,17 @@ async function handleCandleData(data) {
 async function executeTradeOrders(timeframe, pair, type) {
     try {
         try {
-            await deleteManyCandle({ timeframe, pair }, "en");
+            // await deleteManyCandle({ timeframe, pair }, "en");
         }
         catch (err) {
             console.log("error in delete many candles by filters: ", err.message, "=========================================================");
         }
+        const exchange = new ccxt.binance({
+            apiKey: process.env.BINANCE_API_KEY,
+            secret: process.env.BINANCE_API_SECRET,
+            enableRateLimit: true,
+        });
+        exchange.setSandboxMode(true);
         let trades = [];
         try {
             trades = (await getAllTrades({ timeframe, pair, status: "pending" }, "en")).data.trades;
@@ -93,8 +99,18 @@ async function executeTradeOrders(timeframe, pair, type) {
             return;
         }
         for (let trade of trades) {
+            const side = getSuitableSide(type);
+            let createTradeOrderResult = null;
             try {
-                await openTrade(trade._id, getSuitableSide(type), 3, "en");
+                createTradeOrderResult = await exchange.createOrder(trade.pair, "market", side, trade.amount);
+                console.log(createTradeOrderResult);
+            }
+            catch (err) {
+                console.log(`error in open trade order in binance by id: ${trade._id}`, err.message, "=========================================================");
+                return;
+            }
+            try {
+                await openTrade(trade._id, side, 3, "en");
             }
             catch (err) {
                 console.log(`error in open trade by id: ${trade._id}`, err.message, "=========================================================");
