@@ -15,6 +15,7 @@ function initializeTradeSocket(baseSocketURL, rest) {
         });
         tradePlatformSocket.on("close", (code, reason) => {
             console.log("Close Connect To Trade Platform Web Socket !: ", `code: ${code}`, `reason: ${reason}`);
+            initializeTradeSocket(process.env.BINANCE_BASE_WEB_SOCKET_URL, `/stream?streams=${BINANCE_TRADE_STREAMS.map((stream) => `${stream.pair}@kline_${stream.timeframe}`).join("/")}`);
         });
         tradePlatformSocket.on("message", (data) => {
             const message = data instanceof Buffer ? data.toString() : data;
