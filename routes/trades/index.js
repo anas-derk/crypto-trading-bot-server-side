@@ -50,7 +50,7 @@ tradesRouter.get("/trades-count", validateJWT, tradesController.getTradesCount);
 tradesRouter.get("/all-trades-inside-the-page",
     validateJWT,
     (req, res, next) => {
-        const { pageNumber, pageSize, _id, startSide, endSide, pair, status } = req.query;
+        const { pageNumber, pageSize, _id, startSide, endSide, pair, timeframe, status } = req.query;
         validateIsExistValueForFieldsAndDataTypes([
             { fieldName: "page Number", fieldValue: Number(pageNumber), dataTypes: ["number"], isRequiredValue: true },
             { fieldName: "page Size", fieldValue: Number(pageSize), dataTypes: ["number"], isRequiredValue: true },
@@ -58,6 +58,7 @@ tradesRouter.get("/all-trades-inside-the-page",
             { fieldName: "Start Side", fieldValue: startSide, dataTypes: ["string"], isRequiredValue: false },
             { fieldName: "End Side", fieldValue: endSide, dataTypes: ["string"], isRequiredValue: false },
             { fieldName: "Pair", fieldValue: pair, dataTypes: ["string"], isRequiredValue: false },
+            { fieldName: "Time Frame", fieldValue: timeframe, dataTypes: ["string"], isRequiredValue: false },
             { fieldName: "Status", fieldValue: status, dataTypes: ["string"], isRequiredValue: false },
         ], res, next);
     },
@@ -83,6 +84,14 @@ tradesRouter.get("/all-trades-inside-the-page",
         const { pair } = req.query;
         if (pair) {
             validatePair(pair, res, next);
+            return;
+        }
+        next();
+    },
+    (req, res, next) => {
+        const { timeframe } = req.query;
+        if (timeframe) {
+            validateTimeframe(timeframe, res, next);
             return;
         }
         next();

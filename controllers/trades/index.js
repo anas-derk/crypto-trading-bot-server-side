@@ -40,6 +40,7 @@ function getFiltersObject(filters) {
         if (objectKey === "startSide") filtersObject[objectKey] = filters[objectKey];
         if (objectKey === "endSide") filtersObject[objectKey] = filters[objectKey];
         if (objectKey === "pair") filtersObject[objectKey] = filters[objectKey];
+        if (objectKey === "timeframe") filtersObject[objectKey] = filters[objectKey];
         if (objectKey === "status") filtersObject[objectKey] = filters[objectKey];
     }
     return filtersObject;
