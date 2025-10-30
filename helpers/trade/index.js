@@ -10,6 +10,20 @@ const { createScheduledOrder } = require("../../repositories/scheduled_trades");
 
 async function runBot(timeframe, pair) {
     try {
+        const exchange = new ccxt.binance({
+            apiKey: process.env.NODE_ENV === "development" ? process.env.BINANCE_TEST_API_KEY : process.env.BINANCE_API_KEY,
+            secret: process.env.NODE_ENV === "development" ? process.env.BINANCE_TEST_API_SECRET : process.env.BINANCE_API_SECRET,
+            enableRateLimit: true,
+        });
+        if (process.env.NODE_ENV === "development") {
+            exchange.setSandboxMode(true);
+        }
+        const balance = await exchange.fetchBalance();
+        console.log("Free : ===========================================");
+        console.log(`USDT: ${balance["free"]["USDT"]}, ETH: ${balance["free"]["ETH"]}`);
+        console.log("===========================================");
+        console.log("Used : ===========================================");
+        console.log(`USDT: ${balance["used"]["USDT"]}, ETH: ${balance["used"]["ETH"]}`);
         let candles = [];
         try {
             candles = (await getAllCandles({ timeframe, pair }, "en")).data.candles;
@@ -79,17 +93,19 @@ async function handleCandleData(data) {
 async function executeTradeOrders(timeframe, pair, type) {
     try {
         try {
-            // await deleteManyCandle({ timeframe, pair }, "en");
+            await deleteManyCandle({ timeframe, pair }, "en");
         }
         catch (err) {
             console.log("error in delete many candles by filters: ", err.message, "=========================================================");
         }
         const exchange = new ccxt.binance({
-            apiKey: process.env.BINANCE_API_KEY,
-            secret: process.env.BINANCE_API_SECRET,
+            apiKey: process.env.NODE_ENV === "development" ? process.env.BINANCE_TEST_API_KEY : process.env.BINANCE_API_KEY,
+            secret: process.env.NODE_ENV === "development" ? process.env.BINANCE_TEST_API_SECRET : process.env.BINANCE_API_SECRET,
             enableRateLimit: true,
         });
-        exchange.setSandboxMode(true);
+        if (process.env.NODE_ENV === "development") {
+            exchange.setSandboxMode(true);
+        }
         let trades = [];
         try {
             trades = (await getAllTrades({ timeframe, pair, status: "pending" }, "en")).data.trades;
@@ -103,14 +119,13 @@ async function executeTradeOrders(timeframe, pair, type) {
             let createTradeOrderResult = null;
             try {
                 createTradeOrderResult = await exchange.createOrder(trade.pair, "market", side, trade.amount);
-                console.log(createTradeOrderResult);
             }
             catch (err) {
                 console.log(`error in open trade order in binance by id: ${trade._id}`, err.message, "=========================================================");
                 return;
             }
             try {
-                await openTrade(trade._id, side, 3, "en");
+                await openTrade(trade._id, side, createTradeOrderResult.average, "en");
             }
             catch (err) {
                 console.log(`error in open trade by id: ${trade._id}`, err.message, "=========================================================");
